@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %} | Invoice Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block head_styles %}{% endblock %}
+</head>
+<body>
+
+<div class="dashboard">
+    <aside class="sidebar">
+        <h2>OpenSlot</h2>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">🏠 Dashboard</a></li>
+                <li><a href="{{ url_for('manage_clients') }}">👥 Manage Clients</a></li>
+                <li><a href="{{ url_for('add_invoice') }}">➕ Add Invoice</a></li>
+                <li><a href="{{ url_for('view_invoices') }}" class="active">📄 View Invoices</a></li>
+                <li><a href="{{ url_for('analytics_page') }}">📊 Analytics</a></li>
+                <li><a href="{{ url_for('logout') }}">🚪 Logout</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+</div>
+
+<main class="main-content">
+    </main>
+</div>
+
+{% block scripts %}{% endblock %}
+
+</body>
+</html>
+
+</body>
+</html>

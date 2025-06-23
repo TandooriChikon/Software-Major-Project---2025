@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% if filter_status %}
+            {{ filter_status | capitalize }} Invoices
+        {% else %}
+            All Invoices
+        {% endif %}
+    </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .header-content { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header-content .actions a { margin-left: 10px; }
+        .btn-download { display: inline-block; background-color: #007bff; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; font-size: 14px; }
+        .btn-report { display: inline-block; background-color: #17a2b8; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; font-size: 14px; }
+        
+        .actions-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .payment-form {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .payment-form input {
+            width: 70px;
+            padding: 5px;
+        }
+        .payment-form button, .btn-ai {
+            white-space: nowrap;
+        }
+        .action-links {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: auto;
+        }
+        .btn-action {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-ai { background-color: #9b59b6; margin-right: 5px; }
+        .btn-pdf { background-color: #6c757d; }
+        .btn-edit { background-color: #f39c12; }
+        .btn-delete { background-color: #e74c3c; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 30px; border-radius: 8px; max-width: 600px; width: 90%; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .modal-content h3 { margin-top: 0; }
+        .modal-content textarea { width: 100%; height: 250px; margin-top: 15px; font-family: inherit; padding: 10px; border: 1px solid #ccc; line-height: 1.5;}
+        .modal-close { float: right; cursor: pointer; font-size: 24px; font-weight: bold; line-height: 1; }
+        .modal-footer { margin-top: 20px; text-align: right; }
+        .btn-send { background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <aside class="sidebar">
+        <h2>OpenSlot</h2>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">🏠 Dashboard</a></li>
+                <li><a href="{{ url_for('manage_clients') }}">👥 Manage Clients</a></li>
+                <li><a href="{{ url_for('add_invoice') }}">➕ Add Invoice</a></li>
+                <li><a href="{{ url_for('view_invoices') }}" class="active">📄 View Invoices</a></li>
+                <li><a href="{{ url_for('analytics_page') }}">📊 Analytics</a></li>
+                <li><a href="{{ url_for('logout') }}">🚪 Logout</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="header-content">
+            <div>
+                {% if filter_status %}
+                    <h1>{{ filter_status | capitalize }} Invoices</h1>
+                {% else %}
+                    <h1>All Invoices</h1>
+                {% endif %}
+            </div>
+            <div class="actions">
+                <a href="{{ url_for('download_unpaid_invoices_pdf') }}" class="btn-download">Unpaid Summary (PDF)</a>
+                <a href="{{ url_for('download_full_report_pdf') }}" class="btn-report">Full Report (PDF)</a>
+            </div>
+        </header>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer Name</th>
+                    <th>Total Amount</th>
+                    <th>Amount Paid</th>
+                    <th>Balance Due</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for invoice in invoices %}
+                <tr>
+                    <td>{{ invoice['id'] }}</td>
+                    <td>{{ invoice['customer_name'] }}</td>
+                    <td>${{ "%.2f"|format(invoice['amount']) }}</td>
+                    <td>${{ "%.2f"|format(invoice['paid_amount']) }}</td>
+                    <td><b>${{ "%.2f"|format(invoice['amount'] - invoice['paid_amount']) }}</b></td>
+                    <td>
+                        {% if invoice['status'] == 'Paid' %}
+                            <span class="badge badge-paid">Paid</span>
+                        {% elif invoice['status'] == 'Partially Paid' %}
+                            <span class="badge badge-partial">Partial</span>
+                        {% else %}
+                            <span class="badge badge-unpaid">Unpaid</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="actions-container">
+                        
+                            {% if invoice['status'] != 'Paid' %}
+                                <form action="{{ url_for('record_payment', invoice_id=invoice['id']) }}" method="POST" class="payment-form">
+                                    <input type="number" name="payment_amount" placeholder="Amt" 
+                                           step="0.01" min="0.01" max="{{ '%.2f'|format(invoice['amount'] - invoice['paid_amount']) }}" required>
+                                    <button type="submit">Record</button>
+                                </form>
+                                <button class="btn-ai" data-invoice-id="{{ invoice.id }}">Draft Reminder</button>
+                            {% endif %}
+
+                            <div class="action-links">
+                                <a href="{{ url_for('download_single_invoice_pdf', invoice_id=invoice.id) }}" class="btn-action btn-pdf">PDF</a>
+                                <a href="{{ url_for('edit_invoice', invoice_id=invoice.id) }}" class="btn-action btn-edit">Edit</a>
+                                <a href="{{ url_for('delete_invoice', invoice_id=invoice.id) }}" class="btn-action btn-delete" onclick="return confirm('Are you sure?');">Delete</a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 20px;">No invoices found for this filter.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</div>
+
+<div id="aiDraftModal" class="modal-overlay">
+    <div class="modal-content">
+        <span id="closeModal" class="modal-close">&times;</span>
+        <h3>AI-Generated Reminder Draft</h3>
+        <p id="modal-status">Generating draft, please wait...</p>
+        <textarea id="aiDraftTextarea"></textarea>
+        <div class="modal-footer">
+            <button id="sendEmailBtn" class="btn-send">Send Email</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('aiDraftModal');
+    const closeBtn = document.getElementById('closeModal');
+    const statusText = document.getElementById('modal-status');
+    const draftTextarea = document.getElementById('aiDraftTextarea');
+    const sendBtn = document.getElementById('sendEmailBtn');
+    let currentInvoiceId = null;
+
+    document.querySelectorAll('.btn-ai').forEach(button => {
+        button.addEventListener('click', function() {
+            currentInvoiceId = this.dataset.invoiceId;
+            statusText.textContent = 'Generating draft, please wait...';
+            draftTextarea.value = '';
+            modal.style.display = 'flex';
+
+            fetch(`/draft_reminder_email/${currentInvoiceId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        statusText.textContent = "An error occurred.";
+                        draftTextarea.value = data.error;
+                    } else {
+                        statusText.textContent = "Review and edit the draft below, then click send.";
+                        draftTextarea.value = data.draft.trim();
+                    }
+                })
+                .catch(error => {
+                    statusText.textContent = "A network error occurred.";
+                    console.error("Fetch error:", error);
+                });
+        });
+    });
+
+    sendBtn.addEventListener('click', function() {
+        const finalEmailBody = draftTextarea.value;
+        if (!finalEmailBody || !currentInvoiceId) {
+            alert("Cannot send empty email.");
+            return;
+        }
+        statusText.textContent = 'Sending email, please wait...';
+        fetch('/api/send_reminder', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                invoice_id: currentInvoiceId,
+                email_body: finalEmailBody
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Email sent successfully!");
+                modal.style.display = 'none';
+            } else {
+                alert("Error: " + data.error);
+                statusText.textContent = "Failed to send. Please try again.";
+            }
+        })
+        .catch(error => {
+            console.error("Send error:", error);
+            alert("A network error occurred while sending.");
+            statusText.textContent = "A network error occurred.";
+        });
+    });
+
+    closeBtn.onclick = () => modal.style.display = 'none';
+    window.onclick = (event) => {
+        if (event.target == modal) modal.style.display = "none";
+    }
+});
+</script>
+</body>
+</html>

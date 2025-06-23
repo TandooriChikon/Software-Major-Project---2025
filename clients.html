@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Clients | Invoice Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .main-content h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+        .main-content p {
+            color: #888;
+            margin-top: -5px;
+            margin-bottom: 30px;
+        }
+
+        .clients-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            align-items: flex-start;
+        }
+        
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 30px;
+        }
+
+        .card h4 {
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #4C82F7;
+            box-shadow: 0 0 0 2px rgba(76, 130, 247, 0.2);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background-color: #4C82F7;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: #3C6FD9;
+        }
+
+        .clients-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .clients-table thead th {
+            text-align: left;
+            padding: 12px 15px;
+            color: #888;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-bottom: 2px solid #e9ecef;
+            background: none !important;
+        }
+        
+        .clients-table tbody td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            color: #444;
+        }
+
+        .clients-table tbody tr:last-of-type td {
+            border-bottom: none;
+        }
+
+        .empty-row td {
+            text-align: center;
+            padding: 40px 0;
+            color: #888;
+        }
+
+        .btn-action {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: white;
+            font-size: 13px;
+            margin-right: 5px;
+        }
+        .btn-edit { background-color: #f39c12; }
+        .btn-delete { background-color: #e74c3c; }
+
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <aside class="sidebar">
+      <h2>OpenSlot</h2>
+      <nav>
+    <ul>
+        <li><a href="{{ url_for('index') }}">🏠 Dashboard</a></li>
+        <li><a href="{{ url_for('manage_clients') }}">👥 Manage Clients</a></li>
+        <li><a href="{{ url_for('add_invoice') }}">➕ Add Invoice</a></li>
+        <li><a href="{{ url_for('view_invoices') }}">📄 View Invoices</a></li>
+        <li><a href="{{ url_for('analytics_page') }}">📊 Analytics</a></li>
+        <li><a href="{{ url_for('logout') }}">🚪 Logout</a></li>
+    </ul>
+</nav>
+    </aside>
+
+<div class="main-content">
+    <h2>Manage Your Clients</h2>
+    <p>Add new clients or view your existing client list.</p>
+
+    <div class="clients-container">
+        
+        <div class="card">
+            <h4>Add New Client</h4>
+            <form action="{{ url_for('add_client') }}" method="post">
+                <div class="form-group">
+                    <label for="name">Client Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Client Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="hourly_rate">Hourly Rate ($)</label>
+                    <input type="number" id="hourly_rate" name="hourly_rate" step="0.01" min="0" placeholder="e.g., 50.00">
+                </div>
+                <button type="submit" class="btn-submit">Add Client</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <table class="clients-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Hourly Rate</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clients %}
+                    <tr>
+                        <td>{{ client.id }}</td>
+                        <td>{{ client.name }}</td>
+                        <td>{{ client.email }}</td>
+                        <td>${{ "%.2f"|format(client.hourly_rate) if client.hourly_rate else "N/A" }}</td>
+                        <td>
+                            <a href="{{ url_for('edit_client', client_id=client.id) }}" class="btn-action btn-edit">Edit</a>
+                            <a href="{{ url_for('delete_client', client_id=client.id) }}" class="btn-action btn-delete" onclick="return confirm('Are you sure?');">Delete</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr class="empty-row">
+                        <td colspan="5">You haven't added any clients yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

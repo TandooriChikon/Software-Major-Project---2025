@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Add Invoice | Invoice Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="dashboard">
+    <aside class="sidebar">
+        <h2>OpenSlot</h2>
+        <nav>
+    <ul>
+        <li><a href="{{ url_for('index') }}">🏠 Dashboard</a></li>
+        <li><a href="{{ url_for('manage_clients') }}">👥 Manage Clients</a></li>
+        <li><a href="{{ url_for('add_invoice') }}">➕ Add Invoice</a></li>
+        <li><a href="{{ url_for('view_invoices') }}">📄 View Invoices</a></li>
+        <li><a href="{{ url_for('analytics_page') }}">📊 Analytics</a></li>
+        <li><a href="{{ url_for('logout') }}">🚪 Logout</a></li>
+    </ul>
+</nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <h1>Add a New Invoice</h1>
+            <p>Fill out the details below to create a new invoice based on hours worked.</p>
+        </header>
+        
+        <div class="form-container">
+            <form method="POST">
+
+                <div class="form-group">
+                    <label for="client_id">Assign to Client</label>
+                    <select name="client_id" id="client_id" required>
+                        <option value="" disabled selected>-- Select a Client --</option>
+                        {% for client in clients %}
+                            <option value="{{ client['id'] }}">{{ client['name'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="hours_worked">Hours Worked</label>
+                    <input type="number" id="hours_worked" name="hours_worked" step="0.01" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="due_date">Due Date</label>
+                    <input type="date" id="due_date" name="due_date" required>
+                </div>
+
+                <input type="submit" value="Create Invoice">
+            </form>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

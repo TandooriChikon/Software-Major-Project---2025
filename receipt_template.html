@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download Receipt</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Generate Unpaid Invoices PDF</h1>
+
+        <p>
+            Click the button below to generate and download a receipt of all your unpaid invoices.
+        </p>
+
+        <a href="{{ url_for('generate_receipt') }}">
+            <button style="
+                padding: 12px 20px;
+                font-size: 16px;
+                background-color: #3498db;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+            ">
+                Download PDF
+            </button>
+        </a>
+
+        <p style="margin-top: 20px;">
+            <a href="{{ url_for('index') }}">← Back to Home</a>
+        </p>
+    </div>
+
+</body>
+</html>

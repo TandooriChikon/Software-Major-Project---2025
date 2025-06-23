@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Reset Code</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Enter the Code We Emailed You</h2>
+    {% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
+    <form method="POST">
+        <label>Verification Code:</label><br>
+        <input type="text" name="code" required><br><br>
+        <button type="submit">Verify</button>
+    </form>
+</body>
+</html>

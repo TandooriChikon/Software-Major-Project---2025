@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard | Invoice Manager</title>
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <h2>OpenSlot</h2>
+      <nav>
+    <ul>
+        <li><a href="{{ url_for('index') }}">🏠 Dashboard</a></li>
+        <li><a href="{{ url_for('manage_clients') }}">👥 Manage Clients</a></li>
+        <li><a href="{{ url_for('add_invoice') }}">➕ Add Invoice</a></li>
+        <li><a href="{{ url_for('view_invoices') }}">📄 View Invoices</a></li>
+        <li><a href="{{ url_for('analytics_page') }}">📊 Analytics</a></li>
+        <li><a href="{{ url_for('logout') }}">🚪 Logout</a></li>
+    </ul>
+</nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Dashboard</h1>
+        <p>Welcome back, {{ session['username'] }}</p>
+      </header>
+
+      <div class="card-grid">
+
+    <a href="{{ url_for('view_invoices') }}" class="card-link">
+      <div class="card">
+        <h3>Total Invoices</h3>
+        <p>📄 {{ total }}</p>
+      </div>
+    </a>
+
+    <a href="{{ url_for('view_invoices', status='Unpaid') }}" class="card-link">
+      <div class="card">
+        <h3>Unpaid</h3>
+        <p>💰 {{ unpaid }}</p>
+      </div>
+    </a>
+
+    <a href="{{ url_for('view_invoices', status='Paid') }}" class="card-link">
+      <div class="card">
+        <h3>Paid</h3>
+        <p>✅ {{ paid }}</p>
+      </div>
+    </a>
+
+</div>
+
+      <div id="calendar-container">
+        <h3>Your Calendar</h3>
+        <div id="calendar"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/index.global.min.js') }}"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const calendarEl = document.getElementById('calendar');
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        height: 600,
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,listWeek'
+        },
+        events: '/get_events',
+        selectable: true,
+        editable: true,
+        dateClick: function (info) {
+          const title = prompt('Enter Event Title:');
+          if (title) {
+            const eventData = {
+              title: title,
+              start: info.dateStr,
+              color: 'green'
+            };
+            calendar.addEvent(eventData);
+            fetch('/add_event', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({title: title, date: info.dateStr})
+            });
+          }
+        },
+        eventClick: function (info) {
+          if (info.event.id.startsWith('due-')) {
+            alert('This is an invoice due date and cannot be deleted from the calendar.');
+            return;
+          }
+          if (confirm(`Are you sure you want to delete the event "${info.event.title}"?`)) {
+            info.event.remove();
+            fetch(`/delete_event/${info.event.id}`, {
+              method: 'DELETE'
+            });
+          }
+        }
+      });
+      calendar.render();
+    });
+  </script>
+</body>
+</html>
