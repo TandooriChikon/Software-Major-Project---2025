@@ -11,7 +11,6 @@ body {
     line-height: 1.6;
 }
 
-/* Typography */
 h1,
 h2,
 h3 {
@@ -38,7 +37,6 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Centered form layout */
 form {
     max-width: 420px;
     margin: 60px auto;
@@ -52,7 +50,6 @@ form h2 {
     margin-bottom: 20px;
 }
 
-/* Input fields */
 input[type="text"],
 input[type="email"],
 input[type="password"] {
@@ -76,7 +73,6 @@ input:focus {
     outline: none;
 }
 
-/* Buttons */
 button,
 input[type="submit"] {
     width: 100%;
@@ -96,7 +92,6 @@ input[type="submit"]:hover {
     background-color: #2980b9;
 }
 
-/* Error messages */
 .error {
     color: red;
     text-align: center;
@@ -104,7 +99,6 @@ input[type="submit"]:hover {
     font-size: 14px;
 }
 
-/* Container for index/dashboard */
 .container {
     max-width: 900px;
     margin: 40px auto;
@@ -117,7 +111,6 @@ input[type="submit"]:hover {
 
 .container-wide {
     max-width: 1500px;
-    /* A new, wider size */
 }
 
 .container a {
@@ -134,7 +127,6 @@ input[type="submit"]:hover {
     background-color: #2980b9;
 }
 
-/* Invoice Table */
 table {
     width: 100%;
     margin-top: 30px;
@@ -181,13 +173,11 @@ tr:hover {
     color: #777;
 }
 
-/* Layout */
 .dashboard {
     display: flex;
     min-height: 100vh;
 }
 
-/* Sidebar */
 .sidebar {
     width: 240px;
     background-color: #1e2a3a;
@@ -221,14 +211,12 @@ tr:hover {
     color: #1abc9c;
 }
 
-/* Main content */
 .main-content {
     flex-grow: 1;
     padding: 40px;
     background-color: #f5f7fa;
 }
 
-/* Header */
 .header h1 {
     margin-bottom: 10px;
     font-size: 28px;
@@ -239,7 +227,6 @@ tr:hover {
     font-size: 15px;
 }
 
-/* Cards */
 .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -335,36 +322,26 @@ tr:hover {
     margin: 0 auto;
 }
 
-/* === NEW STYLES FOR INVOICE PAGE === */
-
-/* 1. Header Container */
 .invoice-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    /* Adds space below the header */
 }
 
-/* 2. Page Actions Container (for the download button) */
 .page-actions {
     display: flex;
     justify-content: flex-end;
-    /* Pushes button to the right */
     margin-bottom: 20px;
 }
 
-/* 3. Table Cell for Action Buttons */
 td.actions-cell {
     display: flex;
     align-items: center;
     gap: 8px;
-    /* Adds consistent spacing between buttons */
     white-space: nowrap;
-    /* Prevents buttons from wrapping */
 }
 
-/* 4. General styling for all action links/buttons */
 .actions-cell a,
 .actions-cell button {
     padding: 6px 12px;
@@ -377,10 +354,8 @@ td.actions-cell {
     transition: background-color 0.3s ease;
 }
 
-/* Specific colors for each button */
 .actions-cell a.edit-btn {
     background-color: #f39c12;
-    /* Orange */
 }
 
 .actions-cell a.edit-btn:hover {
@@ -389,7 +364,6 @@ td.actions-cell {
 
 .actions-cell a.delete-btn {
     background-color: #e74c3c;
-    /* Red */
 }
 
 .actions-cell a.delete-btn:hover {
@@ -398,29 +372,19 @@ td.actions-cell {
 
 .actions-cell button {
     background-color: #3ea3de;
-    /* Blue */
 }
 
 .actions-cell button:hover {
     background-color: #2980b9;
 }
 
-/* =================================== */
-/* --- Custom FullCalendar Styling --- */
-/* =================================== */
-
-/* 1. Toolbar and Buttons */
-/* ---------------------- */
 
 .fc-header-toolbar {
     margin: 1.5em 0 !important;
-    /* Add more vertical space around the toolbar */
 }
 
-/* Style all buttons (Prev, Next, Today, Month, List) */
 .fc .fc-button {
     background-color: #3498db;
-    /* Your app's primary blue */
     color: white;
     border: none;
     padding: 8px 16px;
@@ -430,31 +394,22 @@ td.actions-cell {
     transition: opacity 0.2s ease-in-out;
 }
 
-/* Hover effect for buttons */
 .fc .fc-button:hover {
     opacity: 1;
     background-color: #2980b9;
 }
 
-/* Style for the 'active' button (e.g., the currently selected Month view) */
 .fc .fc-button-primary:not(:disabled).fc-button-active {
     background-color: #1e2a3a;
-    /* Your sidebar's dark color */
     opacity: 1;
 }
 
-/* Style for the main title (e.g., "June 2025") */
 .fc .fc-toolbar-title {
     font-size: 1.7em;
     font-weight: 500;
     color: #333;
 }
 
-
-/* 2. Calendar Grid, Headers, and Cells */
-/* ------------------------------------- */
-
-/* Remove default borders and use a box-shadow for a modern look */
 .fc-view-harness {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     border-radius: 10px;
@@ -465,69 +420,46 @@ td.actions-cell {
     border: none;
 }
 
-/* Day headers (Sun, Mon, Tue, etc.) */
 .fc .fc-col-header-cell {
     background-color: #f5f7fa;
-    /* Your page's light background color */
     border-bottom: 1px solid #eaeaea;
     padding: 12px 0;
     font-weight: 600;
     color: #787c81;
 }
 
-/* Today's date highlighting */
 .fc .fc-day-today {
     background-color: rgba(52, 152, 219, 0.1);
-    /* A very light, transparent version of your blue */
 }
 
-/* All day number text */
 .fc .fc-daygrid-day-number {
     padding: 8px;
     font-weight: 500;
 }
 
-/* Add a subtle hover effect on each day cell */
 .fc .fc-daygrid-day:hover {
     background-color: rgba(52, 152, 219, 0.05);
 }
 
-
-/* 3. Events */
-/* --------- */
-
-/* General styling for all events */
 .fc-event {
     border: none !important;
-    /* Remove the default border */
     padding: 4px 6px;
     font-weight: 500;
     border-radius: 4px;
     cursor: pointer;
 }
 
-/* Your get_events() function in app.py sets the colors, so this will work automatically */
 .fc-event[style*="background-color: red"] {
     background-color: #e74c3c !important;
-    /* A nicer red */
 }
 
 .fc-event[style*="background-color: green"] {
     background-color: #2ecc71 !important;
-    /* A nicer green */
 }
-
-/* ======================================================= */
-/* --- Custom FullCalendar Styling V2 (Cleaner Look) --- */
-/* ======================================================= */
-
-/* 1. Main Calendar Container & Title */
-/* ---------------------------------- */
 
 #calendar-container {
     margin-top: 40px;
     background: #ffffff;
-    /* Explicitly white */
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
@@ -538,29 +470,19 @@ td.actions-cell {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.09);
 }
 
-/* Style the 'Your Calendar' H3 title */
 #calendar-container h3 {
     text-align: left;
     color: #1e2a3a;
-    /* Use the dark sidebar color for contrast */
     font-weight: 600;
     margin-bottom: 25px;
-    /* More space below the title */
     padding-bottom: 10px;
     border-bottom: 1px solid #eaeaea;
-    /* A subtle separator line */
 }
-
-
-/* 2. Toolbar and Buttons */
-/* ---------------------- */
 
 .fc-header-toolbar {
     margin: 0 0 1.5em 0 !important;
-    /* Remove top margin, keep bottom */
 }
 
-/* Keep button styles from before, maybe slightly smaller padding */
 .fc .fc-button {
     background-color: #3498db;
     color: white;
@@ -575,7 +497,6 @@ td.actions-cell {
 .fc .fc-button:hover {
     opacity: 1;
     transform: translateY(-1px);
-    /* Subtle lift effect */
     background-color: #2980b9;
 }
 
@@ -591,11 +512,6 @@ td.actions-cell {
     color: #333;
 }
 
-
-/* 3. Calendar Grid, Headers, and Cells */
-/* ------------------------------------- */
-
-/* Remove the outer box-shadow here since it's on the main container now */
 .fc-view-harness {
     box-shadow: none;
 }
@@ -605,16 +521,13 @@ td.actions-cell {
     border: none;
 }
 
-/* Soften the grid borders */
 .fc th,
 .fc td {
     border-color: #f0f0f0;
 }
 
-/* Day headers (Sun, Mon, Tue, etc.) */
 .fc .fc-col-header-cell {
     background-color: transparent;
-    /* Remove background */
     border-bottom: 1px solid #eaeaea;
     padding: 12px 0;
     font-weight: 500;
@@ -623,7 +536,6 @@ td.actions-cell {
     color: #888;
 }
 
-/* This is a more specific selector to ensure 'today' is blue, not yellow */
 body .fc-day-today {
     background-color: rgba(52, 152, 219, 0.1) !important;
 }
@@ -637,10 +549,6 @@ body .fc-day-today {
     background-color: rgba(52, 152, 219, 0.04);
 }
 
-
-/* 4. Events */
-/* --------- */
-
 .fc-event {
     border: 1px solid rgba(0, 0, 0, 0.1) !important;
     padding: 4px 8px;
@@ -650,7 +558,6 @@ body .fc-day-today {
     cursor: pointer;
 }
 
-/* Your get_events() function in app.py sets the colors */
 .fc-event[style*="background-color: red"] {
     background-color: #e74c3c !important;
     border-color: #c0392b !important;
@@ -661,11 +568,6 @@ body .fc-day-today {
     border-color: #27ae60 !important;
 }
 
-/* =================================== */
-/* --- Add Invoice Form Styling --- */
-/* =================================== */
-
-/* Use the existing form-container for a nice centered card */
 .form-container {
     max-width: 550px;
     margin: 40px auto;
@@ -675,12 +577,10 @@ body .fc-day-today {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* This creates space between each form field */
 .form-group {
     margin-bottom: 20px;
 }
 
-/* Style the labels for better readability */
 .form-group label {
     display: block;
     margin-bottom: 8px;
@@ -689,7 +589,6 @@ body .fc-day-today {
     text-align: left;
 }
 
-/* Ensure all input types look consistent */
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -701,19 +600,16 @@ input[type-="date"] {
     border-radius: 8px;
     transition: border-color 0.3s ease;
     font-size: 16px;
-    /* Ensure consistent font size */
 }
 
 .header {
     text-align: center;
-    /* This will center the "Edit Invoice" title */
     margin-bottom: 30px;
 }
 
 .form-container {
     max-width: 500px;
     margin: 20px auto;
-    /* 'auto' on left/right also helps center the form container */
     background: white;
     padding: 30px;
     border-radius: 8px;
@@ -722,17 +618,12 @@ input[type-="date"] {
 
 .form-group-buttons {
     display: flex;
-    /* Aligns items in a row */
     align-items: center;
-    /* Vertically centers the button and link */
     gap: 20px;
-    /* Creates space between them */
     margin-top: 25px;
-    /* Adds space above the buttons */
 }
 
 .btn-submit {
-    /* You may already have this style - it's here for completeness */
     padding: 12px 20px;
     border: none;
     background-color: #4C82F7;
@@ -746,7 +637,6 @@ input[type-="date"] {
 .btn-secondary {
     text-decoration: none;
     color: #6c757d;
-    /* A neutral gray color */
     font-weight: 500;
     font-size: 15px;
 }
@@ -755,15 +645,10 @@ input[type-="date"] {
     text-decoration: underline;
 }
 
-/* === Centered Link Below Form Button === */
-
 .form-back-link {
     display: block;
-    /* Makes the link take up its own line */
     text-align: center;
-    /* Centers the text */
     margin-top: 20px;
-    /* Adds space above the link */
     font-size: 15px;
     color: #3498db;
     text-decoration: none;
